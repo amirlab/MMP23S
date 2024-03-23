@@ -260,21 +260,21 @@ The simulation specification `outputChainSize` is a positive scalar of type `int
 
 The simulation specification `outputSampleRefinementCount` is a positive-valued scalar of type `integer`. When `outputSampleSize < 0`, the value of `outputSampleRefinementCount` dictates the maximum number of times the MCMC chain will be refined to remove the autocorrelation within the output MCMC sample. For example,
 
-    if outputSampleRefinementCount = 0,
++   if `outputSampleRefinementCount = 0`,
 
-            no refinement of the output MCMC chain will be performed. The resulting MCMC sample will simply correspond to the full MCMC chain in verbose format (i.e., each sampled state has a weight of one).
+    no refinement of the output MCMC chain will be performed. The resulting MCMC sample will simply correspond to the full MCMC chain in verbose format (i.e., each sampled state has a weight of one).
 
-    if outputSampleRefinementCount = 1,
++   if `outputSampleRefinementCount = 1`,
 
-            the refinement of the output MCMC chain will be done only once if needed, and no more, even though there may still exist some residual autocorrelation in the output MCMC sample. In practice, only one refinement of the final output MCMC chain should be enough to remove the existing autocorrelations in the final output sample. Exceptions occur when the integrated Autocorrelation (ACT) of the output MCMC chain is comparable to or larger than the length of the chain. In such cases, neither the BatchMeans method nor any other method of ACT computation will be able to accurately compute the ACT. Consequently, the samples generated based on the computed ACT values will likely not be i.i.d. and will still be significantly autocorrelated. In such scenarios, more than one refinement of the MCMC chain will be necessary. Very small sample size resulting from multiple refinements of the sample could be a strong indication of the bad mixing of the MCMC chain and the lack of convergence to the target objective function.
+    the refinement of the output MCMC chain will be done only once if needed, and no more, even though there may still exist some residual autocorrelation in the output MCMC sample. In practice, only one refinement of the final output MCMC chain should be enough to remove the existing autocorrelations in the final output sample. Exceptions occur when the integrated Autocorrelation (ACT) of the output MCMC chain is comparable to or larger than the length of the chain. In such cases, neither the BatchMeans method nor any other method of ACT computation will be able to accurately compute the ACT. Consequently, the samples generated based on the computed ACT values will likely not be i.i.d. and will still be significantly autocorrelated. In such scenarios, more than one refinement of the MCMC chain will be necessary. Very small sample size resulting from multiple refinements of the sample could be a strong indication of the bad mixing of the MCMC chain and the lack of convergence to the target objective function.
 
-    if outputSampleRefinementCount > 1,
++   if `outputSampleRefinementCount > 1`,
 
-            the refinement of the output MCMC chain will be done for a maximum `outputSampleRefinementCount` number of times, even though there may still exist some residual autocorrelation in the final output MCMC sample.
+    the refinement of the output MCMC chain will be done for a maximum `outputSampleRefinementCount` number of times, even though there may still exist some residual autocorrelation in the final output MCMC sample.
 
-    if outputSampleRefinementCount >> 1 (e.g., comparable to or larger than the length of the MCMC chain),
++   if `outputSampleRefinementCount >> 1` (e.g., comparable to or larger than the length of the MCMC chain),
 
-            the refinement of the output MCMC chain will continue until the integrated autocorrelation of the resulting final sample is less than 2, virtually implying that an independent identically-distributed (i.i.d.) sample from the target objective function has finally been obtained.
+    the refinement of the output MCMC chain will continue until the integrated autocorrelation of the resulting final sample is less than 2, virtually implying that an independent identically-distributed (i.i.d.) sample from the target objective function has finally been obtained.
 
 Note that to obtain i.i.d. samples from a multidimensional chain, the sampler will, by default, use the maximum of integrated Autocorrelation (ACT) among all dimensions of the chain to refine the chain. Note that the value specified for `outputSampleRefinementCount` is used only when the variable outputSampleSize < 0, otherwise, it will be ignored. The default value is `outputSampleRefinementCount = 2147483647`.
 
@@ -282,29 +282,29 @@ Note that to obtain i.i.d. samples from a multidimensional chain, the sampler wi
 
 The simulation specification `outputSampleRefinementMethod` is a scalar string of maximum length 63 representing the method of computing the (integrated) AutoCorrelation Time (ACT) to be used in the simulation for refining the final output MCMC chain and sample. If specified within an external input file, it must be either singly or doubly quoted. Methods that are currently supported include:
 
-    outputSampleRefinementMethod = 'BatchMeans'
++  `outputSampleRefinementMethod = 'BatchMeans'`
 
-            This method of computing the integrated Autocorrelation Time is based on the approach described in SCHMEISER, B., 1982, Batch size effects in the analysis of simulation output, Oper. Res. 30 556-568. The batch sizes in the BatchMeans method are chosen to be int(N^(2/3)) where N is the length of the MCMC chain. As long as the batch size is larger than the ACT of the chain and there are significantly more than 10 batches, the BatchMeans method will provide reliable estimates of the ACT. Note that the refinement strategy involves two separate phases of sample decorrelation. At the first stage, the Markov chain is decorrelated recursively (for as long as needed) based on the ACT of its compact format, where only the uniquely-visited states are kept in the (compact) chain. Once the Markov chain is refined such that its compact format is fully decorrelated, the second phase of the decorrelation begins during which the Markov chain is decorrelated based on the ACT of the chain in its verbose (Markov) format. This process is repeated recursively for as long as there is any residual autocorrelation in the refined sample.
+    This method of computing the integrated Autocorrelation Time is based on the approach described in SCHMEISER, B., 1982, Batch size effects in the analysis of simulation output, Oper. Res. 30 556-568. The batch sizes in the BatchMeans method are chosen to be int(N^(2/3)) where N is the length of the MCMC chain. As long as the batch size is larger than the ACT of the chain and there are significantly more than 10 batches, the BatchMeans method will provide reliable estimates of the ACT. Note that the refinement strategy involves two separate phases of sample decorrelation. At the first stage, the Markov chain is decorrelated recursively (for as long as needed) based on the ACT of its compact format, where only the uniquely-visited states are kept in the (compact) chain. Once the Markov chain is refined such that its compact format is fully decorrelated, the second phase of the decorrelation begins during which the Markov chain is decorrelated based on the ACT of the chain in its verbose (Markov) format. This process is repeated recursively for as long as there is any residual autocorrelation in the refined sample.
 
-    outputSampleRefinementMethod = 'BatchMeans-compact'
++   `outputSampleRefinementMethod = 'BatchMeans-compact'`
 
-            This is the same as the first case in the above, except that only the first phase of the sample refinement described in the above will be performed, that is, the (verbose) Markov chain is refined only based on the ACT computed from the compact format of the Markov chain. This will lead to a larger final refined sample. However, the final sample will likely not be fully decorrelated.
+    This is the same as the first case in the above, except that only the first phase of the sample refinement described in the above will be performed, that is, the (verbose) Markov chain is refined only based on the ACT computed from the compact format of the Markov chain. This will lead to a larger final refined sample. However, the final sample will likely not be fully decorrelated.
 
-    outputSampleRefinementMethod = 'BatchMeans-verbose'
++   `outputSampleRefinementMethod = 'BatchMeans-verbose'`
 
-            This is the same as the first case in the above, except that only the second phase of the sample refinement described in the above will be performed, that is, the (verbose) Markov chain is refined only based on the ACT computed from the verbose format of the Markov chain. While the resulting refined sample will be fully decorrelated, the size of the refined sample may be smaller than the default choice in the first case in the above.
+    This is the same as the first case in the above, except that only the second phase of the sample refinement described in the above will be performed, that is, the (verbose) Markov chain is refined only based on the ACT computed from the verbose format of the Markov chain. While the resulting refined sample will be fully decorrelated, the size of the refined sample may be smaller than the default choice in the first case in the above.
 
 Note that in order to obtain i.i.d. samples from a multidimensional chain, the sampler will use the average of the ACT among all dimensions of the chain to refine the chain. If the maximum, minimum, or the median of IACs is preferred add '-max' (or '-maximum'), '-min' (or '-minimum'), '-med' (or '-median'), respectively, to the value of `outputSampleRefinementMethod`. For example, 
 
-    outputSampleRefinementMethod = 'BatchMeans-max'
++   `outputSampleRefinementMethod = 'BatchMeans-max'`
 
 or, 
 
-    outputSampleRefinementMethod = 'BatchMeans-compact-max'
++   `outputSampleRefinementMethod = 'BatchMeans-compact-max'`
 
 or, 
 
-    outputSampleRefinementMethod = 'BatchMeans-max-compact'
+    `outputSampleRefinementMethod = 'BatchMeans-max-compact'`
 
 Note that the specified `outputSampleRefinementCount` is used only when the condition `outputSampleSize < 0` holds. Otherwise, it is ignored. The default value is `outputSampleRefinementMethod = 'BatchMeans'`. Note that the input values are case-INsensitive and white-space characters are ignored.
 
@@ -312,15 +312,15 @@ Note that the specified `outputSampleRefinementCount` is used only when the cond
 
 The simulation specification `proposal` is a scalar string of maximum length 63 containing the name of the proposal distribution for the MCMC sampler. When specified from within an external input file, it must be singly or doubly quoted. Options that are currently supported include:
 
-    proposal = 'normal'
++   `proposal = 'normal'`
 
-            This is equivalent to the multivariate normal distribution, which is the most widely-used proposal model along with MCMC samplers.
+    This is equivalent to the multivariate normal distribution, which is the most widely-used proposal model along with MCMC samplers.
 
-    proposal = 'uniform'
++   `proposal = 'uniform'`
 
-            The proposals will be drawn uniformly from within a ndim-dimensional ellipsoid whose covariance matrix and scale are initialized by the user and optionally adaptively updated throughout the simulation.
+    The proposals will be drawn uniformly from within a ndim-dimensional ellipsoid whose covariance matrix and scale are initialized by the user and optionally adaptively updated throughout the simulation.
 
-The default value is 'normal'.
+The default value is `'normal'`.
 
 ### proposalCorMat
 
@@ -334,37 +334,37 @@ The simulation specification `proposalCovMat` is a square positive-definite matr
 
 The simulation specification `proposalScaleFactor` is a scalar string of maximum length 127 containing a positive real-valued number whose square will be multiplied with the covariance matrix of the proposal distribution of the MCMC sampler to shrink or enlarge it. In other words, the proposal distribution will be scaled in every direction by the specified numeric value of `proposalScaleFactor`. It can also be given in units of the string keyword 'gelman' (which is case-INsensitive) after the paper:
 
-   Gelman, Roberts, and Gilks (1996): 'Efficient Metropolis Jumping Rules'.
+    Gelman, Roberts, and Gilks (1996): 'Efficient Metropolis Jumping Rules'.
 
-The paper finds that the optimal scaling factor for a Multivariate Gaussian proposal distribution for the Metropolis-Hastings  Markov Chain Monte Carlo sampling of a target Multivariate Normal Distribution of dimension `ndim` is given by:
+The paper finds that the optimal scaling factor for a Multivariate Gaussian proposal distribution for the Metropolis-Hastings Markov Chain Monte Carlo sampling of a target Multivariate Normal Distribution of dimension `ndim` is given by:
 
     proposalScaleFactor = 2.38 / sqrt(ndim)  ,  in the limit of ndim -> Infinity.
 
 Multiples of the Gelman scale factors are also acceptable as input and can be specified like the following examples:
 
-    proposalScaleFactor = '1'
++   `proposalScaleFactor = '1'`
 
-            multiplies the ndim-dimensional proposal covariance matrix by 1, essentially no change occurs to the covariance matrix.
+    multiplies the ndim-dimensional proposal covariance matrix by 1, essentially no change occurs to the covariance matrix.
 
-    proposalScaleFactor = "1"
++   `proposalScaleFactor = "1"`
 
-            same as the previous example. The double-quotation marks act the same way as single-quotation marks.
+    same as the previous example. The double-quotation marks act the same way as single-quotation marks.
 
-    proposalScaleFactor = '2.5'
++   `proposalScaleFactor = '2.5'`
 
-            multiplies the ndim-dimensional proposal covariance matrix by 2.5.
+    multiplies the ndim-dimensional proposal covariance matrix by 2.5.
 
-    proposalScaleFactor = '2.5*Gelman'
++   `proposalScaleFactor = '2.5*Gelman'`
 
-            multiplies the ndim-dimensional proposal covariance matrix by 2.5 * 2.38/sqrt(ndim).
+    multiplies the ndim-dimensional proposal covariance matrix by 2.5 * 2.38/sqrt(ndim).
 
-    proposalScaleFactor = "2.5 * gelman"
++   `proposalScaleFactor = "2.5 * gelman"`
 
-            same as the previous example, but with double-quotation marks. space characters are ignored.
+    same as the previous example, but with double-quotation marks. space characters are ignored.
 
-    proposalScaleFactor = "2.5 * gelman*gelman*2"
++   `proposalScaleFactor = "2.5 * gelman*gelman*2"`
 
-            equivalent to gelmanFactor-squared multiplied by 5.
+    equivalent to gelmanFactor-squared multiplied by `5`.
 
 Note, however, that the result of Gelman et al. paper applies only to multivariate normal proposal distributions, in the limit of infinite dimensions. Therefore, care must be taken when using Gelman's scaling factor with non-Gaussian proposals and target objective functions. Note that only the product symbol `*` can be parsed in the string value of `proposalScaleFactor`. The presence of other mathematical symbols or multiple appearances of the product symbol will lead to a simulation crash. Also, note that the prescription of an acceptance range specified by the input variable `targetAcceptanceRate` will lead to dynamic modification of the initial input value of `proposalScaleFactor` throughout sampling for `proposalAdaptationCount` times. The default string value for `proposalScaleFactor` is "gelman" (for all proposal distributions), which is subsequently converted to `2.38 / sqrt(ndim)`.
 
@@ -376,17 +376,17 @@ The simulation specification `proposalStart` is a vector type of `real` of the h
 
 The simulation specification `proposalStartDomainCubeLimitLower` is a vector of type `real` of the highest precision available in the ParaMonet library of size `ndim` is the number of dimensions of the domain of the objective function. It contains the lower boundaries of the cubical domain from which the starting point(s) of the MCMC chain(s) will be initialized randomly (only if requested via the input variable `proposalStartRandomized`). This happens only when some or all of the elements of the input specification `proposalStart` are missing. In such cases, every missing value of the input `proposalStart` will be set to the center point between `proposalStartDomainCubeLimitLower` and `proposalStartDomainCubeLimitUpper` in the corresponding dimension. If `proposalStartRandomized` is set to the logical/Boolean true value, then the missing elements of `proposalStart` will be initialized to values drawn randomly from within the corresponding ranges whose lower limits are specified by the input `proposalStartDomainCubeLimitLower`. When specified from within an external input file to the sampler, it is also possible to assign only select values of `proposalStartDomainCubeLimitLower` and leave the rest of the components to be assigned the default value. For example, having the following inside the input file, 
 
-    proposalStartDomainCubeLimitLower(3:5) = -100
++   `proposalStartDomainCubeLimitLower(3:5) = -100`
 
-            will only set the lower limits of the third, fourth, and the fifth dimensions to -100, or,
+    will only set the lower limits of the third, fourth, and the fifth dimensions to -100, or,
 
-    proposalStartDomainCubeLimitLower(1) = -100, proposalStartDomainCubeLimitLower(2) = -1.e6 
++   `proposalStartDomainCubeLimitLower(1) = -100, proposalStartDomainCubeLimitLower(2) = -1.e6`
 
-            will set the lower limit on the first dimension to -100, and 1.e6 on the second dimension, or,
+    will set the lower limit on the first dimension to -100, and 1.e6 on the second dimension, or,
 
-    proposalStartDomainCubeLimitLower = 3*-2.5e100
++   `proposalStartDomainCubeLimitLower = 3*-2.5e100`
 
-            will only set the lower limits on the first, second, and the third dimensions to `-2.5*10^100`, while the rest of the lower limits for the missing dimensions will be automatically set to the default value.
+    will only set the lower limits on the first, second, and the third dimensions to `-2.5*10^100`, while the rest of the lower limits for the missing dimensions will be automatically set to the default value.
 
 The default for all `proposalStartDomainCubeLimitLower` elements are taken from the corresponding elements of `domainCubeLimitLower`.
 
@@ -394,17 +394,17 @@ The default for all `proposalStartDomainCubeLimitLower` elements are taken from 
 
 The simulation specification `proposalStartDomainCubeLimitUpper` is a vector of type `real` of the highest precision available in the ParaMonet library of size `ndim` is the number of dimensions of the domain of the objective function. It contains the upper boundaries of the cubical domain from which the starting point(s) of the MCMC chain(s) will be initialized randomly (only if requested via the input variable `proposalStartRandomized`). This happens only when some or all of the elements of the input specification `proposalStart` are missing. In such cases, every missing value of the input `proposalStart` will be set to the center point between `proposalStartDomainCubeLimitLower` and `proposalStartDomainCubeLimitUpper` in the corresponding dimension. If `proposalStartRandomized` is set to the logical/Boolean true value, then the missing elements of `proposalStart` will be initialized to values drawn randomly from within the corresponding ranges whose upper limits are specified by the input `proposalStartDomainCubeLimitUpper`. When specified from within an external input file to the sampler, it is also possible to assign only select values of `proposalStartDomainCubeLimitUpper` and leave the rest of the components to be assigned the default value. For example, having the following inside the input file, 
 
-    proposalStartDomainCubeLimitUpper(3:5) = -100
++   `proposalStartDomainCubeLimitUpper(3:5) = -100`
 
-            will only set the upper limits of the third, fourth, and the fifth dimensions to -100, or,
+    will only set the upper limits of the third, fourth, and the fifth dimensions to -100, or,
 
-    proposalStartDomainCubeLimitUpper(1) = -100, proposalStartDomainCubeLimitUpper(2) = -1.e6 
++   `proposalStartDomainCubeLimitUpper(1) = -100`, proposalStartDomainCubeLimitUpper(2) = -1.e6 
 
-            will set the upper limit on the first dimension to -100, and 1.e6 on the second dimension, or,
+    will set the upper limit on the first dimension to -100, and 1.e6 on the second dimension, or,
 
-    proposalStartDomainCubeLimitUpper = 3*-2.5e100
++   `proposalStartDomainCubeLimitUpper = 3*-2.5e100`
 
-            will only set the upper limits on the first, second, and the third dimensions to -2.5*10**100, while the rest of the upper limits for the missing dimensions will be automatically set to the default value.
+    will only set the upper limits on the first, second, and the third dimensions to -2.5*10**100, while the rest of the upper limits for the missing dimensions will be automatically set to the default value.
 
 The default values for all elements of proposalStartDomainCubeLimitUpper are taken from the corresponding values in the input variable `domainCubeLimitUpper`.
 
@@ -438,11 +438,11 @@ The simulation specification `proposalAdaptationPeriod` is a positive-valued sca
 
 The simulation specification `proposalAdaptationPeriod` is a non-negative-valued scalar of type `integer` representing the total number of stages for which rejections of new proposals will be tolerated by MCMC sampler before going back to the previously accepted point (state). The condition `0 <= proposalDelayedRejectionCount <= 1000` must hold. Possible values are:
 
-+   proposalDelayedRejectionCount = 0
++   `proposalDelayedRejectionCount = 0`
 
     indicating no deployment of the delayed rejection algorithm.
 
-+   proposalDelayedRejectionCount > 0
++   `proposalDelayedRejectionCount > 0`
 
     which implies a maximum proposalDelayedRejectionCount number of rejections will be tolerated.
 
