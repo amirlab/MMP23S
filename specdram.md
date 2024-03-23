@@ -432,19 +432,19 @@ The simulation specification `proposalAdaptationCountGreedy` is a positive-value
 
 ### proposalAdaptationPeriod
 
-The simulation specification `proposalAdaptationPeriod` is a positive-valued scalar of type `integer`. Every `proposalAdaptationPeriod` calls to the objective function, the parameters of the proposal distribution will be updated. The smaller the value of `proposalAdaptationPeriod`, the easier it will be for the sampler kernel to adapt the proposal distribution to the covariance structure of the objective function. However, this will happen at the expense of slower simulation runtime as the adaptation process can become computationally expensive, in particular, for very high dimensional objective functions (ndim >> 1). The larger the value of `proposalAdaptationPeriod`, the easier it will be for the sampler kernel to keep the sampling efficiency close to the requested target acceptance rate range (if specified via the input variable targetAcceptanceRate). However, too large values for `proposalAdaptationPeriod` will only delay the adaptation of the proposal distribution to the global structure of the objective function that is being sampled. If `outputChainSize <= proposalAdaptationPeriod` holds, then no adaptive updates to the proposal distribution will be made. The default value is `4 * ndim`, where `ndim` is the dimension of the domain of the objective function to be sampled.
+The simulation specification `proposalAdaptationPeriod` is a positive-valued scalar of type `integer`. Every `proposalAdaptationPeriod` calls to the objective function, the parameters of the proposal distribution will be updated. The smaller the value of `proposalAdaptationPeriod`, the easier it will be for the sampler kernel to adapt the proposal distribution to the covariance structure of the objective function. However, this will happen at the expense of slower simulation runtime as the adaptation process can become computationally expensive, in particular, for very high dimensional objective functions (`ndim >> 1`). The larger the value of `proposalAdaptationPeriod`, the easier it will be for the sampler kernel to keep the sampling efficiency close to the requested target acceptance rate range (if specified via the input variable targetAcceptanceRate). However, too large values for `proposalAdaptationPeriod` will only delay the adaptation of the proposal distribution to the global structure of the objective function that is being sampled. If `outputChainSize <= proposalAdaptationPeriod` holds, then no adaptive updates to the proposal distribution will be made. The default value is `4 * ndim`, where `ndim` is the dimension of the domain of the objective function to be sampled.
 
 ### proposalDelayedRejectionCount
 
 The simulation specification `proposalAdaptationPeriod` is a non-negative-valued scalar of type `integer` representing the total number of stages for which rejections of new proposals will be tolerated by MCMC sampler before going back to the previously accepted point (state). The condition `0 <= proposalDelayedRejectionCount <= 1000` must hold. Possible values are:
 
-    proposalDelayedRejectionCount = 0
++   proposalDelayedRejectionCount = 0
 
-            indicating no deployment of the delayed rejection algorithm.
+    indicating no deployment of the delayed rejection algorithm.
 
-    proposalDelayedRejectionCount > 0
++   proposalDelayedRejectionCount > 0
 
-            which implies a maximum proposalDelayedRejectionCount number of rejections will be tolerated.
+    which implies a maximum proposalDelayedRejectionCount number of rejections will be tolerated.
 
 For example, setting `proposalDelayedRejectionCount` to `1` means that at any point during the sampling, if a proposal is rejected, the MCMC sampler will not go back to the last sampled state. Instead, it will continue to propose a new state from the last rejected proposal. If the new state is again rejected based on the rules of the MCMC sampler, then the algorithm will not tolerate further rejections, because the maximum number of rejections to be tolerated has been set by the user to be `proposalDelayedRejectionCount = 1`. The algorithm then goes back to the original last-accepted state and will begin proposing new states from that location. The default value is 0.
 
