@@ -15,7 +15,7 @@ The simulation specification `domain` is a scalar string of maximum length 63, c
 
 +   `domain = 'cube'`
 
-    This is equivalent to an `ndim`-dimensional hyper-cube (`n`-cube) whose upper and lower bounds are specified by the input simulation specifications `domainCubeLimitUpper` and `domainCubeLimitLower` respectively.
+    This is equivalent to an `ndim`-dimensional hyper-cube (n-cube) whose upper and lower bounds are specified by the input simulation specifications `domainCubeLimitUpper` and `domainCubeLimitLower` respectively.
 
 +   `domain = 'ball'`
 
@@ -89,7 +89,7 @@ The simulation specification `domainErrCount` is a scalar of type `integer` beyo
 
 ### domainErrCountMax
 
-The simulation specification `domainErrCountMax` is a scalar of type `integer` beyond which the program will stop globally with a fatal error message declaring that the maximum number of proposal-out-of-domain-bounds has reached. The counter for this global-stop request is reset after a proposal is accepted as a sample from within the domain of the objective function. When out-of-domain sampling happens frequently, it is a strong indication of something fundamentally wrong in the simulation. It is, therefore, important to closely inspect and monitor for such frequent out-of-domain samplings. This can be done by setting domainErrCountMax to an appropriate value determined by the user. The default value is `100000`.
+The simulation specification `domainErrCountMax` is a scalar of type `integer` beyond which the program will stop globally with a fatal error message declaring that the maximum number of proposal-out-of-domain-bounds has reached. The counter for this global-stop request is reset after a proposal is accepted as a sample from within the domain of the objective function. When out-of-domain sampling happens frequently, it is a strong indication of something fundamentally wrong in the simulation. It is, therefore, important to closely inspect and monitor for such frequent out-of-domain samplings. This can be done by setting `domainErrCountMax` to an appropriate value determined by the user. The default value is `100000`.
 
 ### inputFileHasPriority
 
@@ -115,7 +115,7 @@ The default value is `outputChainFileFormat = 'compact'` as it provides a reason
 
 ### outputColumnWidth
 
-The simulation specification `outputColumnWidth` is a non-negative scalar of type `integer` that determines the width of the data columns in the formatted tabular files by output the sampler. If it is set to zero, the sampler will ensure to set the width of each output element to the minimum possible width without losing the requested output precision. In other words, setting `outputColumnWidth = 0` will result in the smallest-size for the formatted output files that are in ASCII format. The default value is 0.
+The simulation specification `outputColumnWidth` is a non-negative scalar of type `integer` that determines the width of the data columns in the formatted tabular files by output the sampler. If it is set to zero, the sampler will ensure to set the width of each output element to the minimum possible width without losing the requested output precision. In other words, setting `outputColumnWidth = 0` will result in the smallest-size for the formatted output files that are in ASCII format. The default value is `0`.
 
 ### outputFileName
 
@@ -135,7 +135,7 @@ where `sampler` is replaced with the name of the ParaMonte sampler invoked, and 
 
 ### outputPrecision
 
-The simulation specification `outputPrecision` is a scalar of type `integer` representing the precision (i.e., the number of significant digits) of the real and complex numbers in the output simulation files. Any positive integer is acceptable as the input value of `outputPrecision`. However, any digits of the output real numbers beyond the actual accuracy of floating-point numbers (e.g., ~16 digits of significance for 64-bit `real`) will be meaningless and random. Set this variable to the precision of the requested floating point precision in the simulation (or to larger values) if full reproducibility of the simulation is needed in the future. However, keep in mind that higher precisions result in larger-size output files. This variable is ignored for binary output (if any occurs during the simulation). The binary output files preserve the full precision of numbers. The default value is `18`.
+The simulation specification `outputPrecision` is a scalar of type `integer` representing the precision (i.e., the number of significant digits) of the real and complex numbers in the output simulation files. Any positive integer is acceptable as the input value of `outputPrecision`. However, any digits of the output real numbers beyond the actual accuracy of floating-point numbers (e.g., ~16 digits of significance for 64-bit `real`) will be meaningless and random. Set this variable to the precision of the requested floating point precision in the simulation (or to larger values) if full reproducibility of the simulation is needed in the future. However, keep in mind that higher precisions result in larger-size output files. This variable is ignored for binary output (if any occurs during the simulation). The binary output files preserve the full precision of numbers. The default value depends on the `real` precision, e.g., `18`.
 
 ### outputReportPeriod
 
@@ -177,11 +177,11 @@ The default value is `outputSampleSize = -1`.
 
 ### outputSeparator
 
-The simulation specification `outputSeparator` is a scalar string of maximum length 63 containing a sequence of one or more allowed characters used to separate fields within records of tabular contents in the simulation output files. Digits, the period symbol `'.'`, and the addition and subtraction operators: `'+'` and `'-'`) are not allowed. To output in Comma-Separated-Values (CSV) format, set `outputSeparator = ','`. If the input value is not provided, the default separator `','` will be used when input `outputColumnWidth = 0`, and a single space character, ',' will be used when input `outputColumnWidth > 0`. A value of '\t' is interpreted as the TAB character. To avoid this interpretation, use '\\\t' to yield '\t' without being interpreted as the TAB character. The default value is `','`.
+The simulation specification `outputSeparator` is a scalar string of maximum length 63 containing a sequence of one or more allowed characters used to separate fields within records of tabular contents in the simulation output files. Digits, the period symbol `'.'`, and the addition and subtraction operators: `'+'` and `'-'`) are not allowed. To output in Comma-Separated-Values (CSV) format, set `outputSeparator = ','`. If the input value is not provided, the default separator `','` will be used when input `outputColumnWidth = 0`, and a single space character, ',' will be used when input `outputColumnWidth > 0`. A value of `'\t'` is interpreted as the TAB character. To avoid this interpretation, use '\\\t' to yield '\t' without being interpreted as the TAB character. The default value is `','`.
 
 ### outputSplashMode
 
-The simulation specification `outputSplashMode` is a scalar string of maximum length 63 representing the level of information output on screen while running or postprocessing the simulation. Three values are possible:
+The simulation specification `outputSplashMode` is a scalar string of maximum length `63` representing the level of information output on screen while running or postprocessing the simulation. Three values are possible:
 
 +   `outputSplashMode = 'normal'`
 
@@ -201,15 +201,15 @@ The default value is `outputSplashMode = 'normal'` in compiled programming langu
 
 The simulation specification `outputStatus` is a scalar string of maximum 15 characters, whose value describes the protocol for dealing and handling the simulation output files in relation to potentially-existing past simulations. The string value must be enclosed by either single or double quotation marks when provided as input in an external input file. Three values are possible:
 
-+   outputStatus = 'extend'
++   `outputStatus = 'extend'`
 
     This is the default behavior where the sampler will search for any prior simulation output files with the same user-specified file name prefix in the working directory to restart the simulation. If an old interrupted set of simulation output files exists in the working directory, the sampler will attempt to restart the simulation from the last recorded simulation state. The restart operation may fail if the user has modified or tampered with the old simulation output files. If prior simulation files exist and represent a complete simulation, a new simulation run will be performed with a new set of output files starting from the last successful run. The parameters of the new simulation are initialized based the output of the most recent successful simulation. For MCMC type of simulations, this means starting from the last sampled point in the output sample file of the previous simulation and using an initial proposal covariance matrix constructed from the output sample of the previous simulation. If the sampler does not find any prior simulations with the same output file names, it will start a new simulation. This default behavior allows seamless restart functionality while ensuring old potentially-valuable computationally expensive simulations are not inadvertently erased and replaced by the new simulation output files.
 
-+   outputStatus = 'repeat'
++   `outputStatus = 'repeat'`
 
     This option is nearly identical to 'extend' except for the fact that the new simulation specifications are not initialized from the specifications of the last successful simulation run (if any exists). Instead, a new set of simulation files will be generated as if the last simulation run is replicated. If the simulation configuration has not changed since the last successful simulation run, then the new simulation output sample, chain, and restart files will be identical to the those of the last successful simulation. This outputting is primarily useful for cross-platform or cross-compiler testing and development.
 
-+   outputStatus = 'retry'
++   `outputStatus = 'retry'`
 
     This option is nearly identical to 'repeat' except for the fact that the new simulation starts afresh and overwrites any potentially existing output files from the most recent simulation with the same names without ever using them. There is no restart functionality with this option. The most recent simulation files are deleted regardless of completion status. This option is effectively equivalent to deleting the set of output files from the last simulation run and rerunning the simulation with the default value 'extend' for the specification `outputStatus`. Use this option for quick tests or small exploratory problems where lots of quick runs must be performed.
 
@@ -217,7 +217,7 @@ The default value is `outputStatus = 'extend'`. The input values are case-INsens
 
 ### parallelism
 
-The simulation specification `parallelism` is a scalar string of maximum length 63 that represents the parallelization method to be used in the simulation. The string value must be enclosed by either single or double quotation marks when provided in an external input file. Two options are currently supported:
+The simulation specification `parallelism` is a scalar string of maximum length `63` that represents the parallelization method to be used in the simulation. The string value must be enclosed by either single or double quotation marks when provided in an external input file. Two options are currently supported:
 
 +   `parallelism = 'multiChain'`
 
@@ -254,7 +254,7 @@ Note that the acceptance ratio adjustments will only occur every `proposalAdapta
 
 ### outputChainSize
 
-The simulation specification `outputChainSize` is a positive scalar of type `integer` whose value determines the number of non-refined, potentially auto-correlated, but unique, samples drawn by the MCMC sampler before stopping the sampling. For example, if `outputChainSize = 10000`, then 10000 unique sample points (with no duplicates) will be drawn from the target objective function that the user has provided. The input value for `outputChainSize` must be a positive integer of a minimum value `ndim + 1` or larger, where `ndim` is the number of dimensions of the domain of the objective function to be sampled. Note that `outputChainSize` is different from and always smaller than the length of the constructed MCMC chain. The default value is `outputChainSize = 100000`.
+The simulation specification `outputChainSize` is a positive scalar of type `integer` whose value determines the number of non-refined, potentially auto-correlated, but unique, samples drawn by the MCMC sampler before stopping the sampling. For example, if `outputChainSize = 10000`, then `10000` unique sample points (with no duplicates) will be drawn from the target objective function that the user has provided. The input value for `outputChainSize` must be a positive integer of a minimum value `ndim + 1` or larger, where `ndim` is the number of dimensions of the domain of the objective function to be sampled. Note that `outputChainSize` is different from and always smaller than the length of the constructed MCMC chain. The default value is `outputChainSize = 100000`.
 
 ### outputSampleRefinementCount
 
