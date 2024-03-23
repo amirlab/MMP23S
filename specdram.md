@@ -7,17 +7,17 @@ example/fortran/pm_sampling/attributes/main.F90 example script.
 
 ### description
 
-The simulation specification `description` is a scalar string of maximum length 8191 characters containing general information about the simulation to be performed. It has no effects on the simulation and serves only as a general description of the simulation for future reference. The sampler parser automatically recognizes the C-style `'\n'` escape sequence as the new-line character and `'\\'` as the backslash character `'\'` if used in the contents of `description`. For example, `'\\n'` will be converted to `'\n'` on the output, while `'\n'` translates to the new-line character. The default value for description is 'UNDEFINED'.
+The simulation specification `description` is a scalar string of maximum length 8191 characters containing general information about the simulation to be performed. It has no effects on the simulation and serves only as a general description of the simulation for future reference. The sampler parser automatically recognizes the C-style `'\n'` escape sequence as the new-line character and `'\\'` as the backslash character `'\'` if used in the contents of `description`. For example, `'\\n'` will be converted to `'\n'` on the output, while `'\n'` translates to the new-line character. The default value for description is `'UNDEFINED'`.
 
 ### domain
 
 The simulation specification `domain` is a scalar string of maximum length 63, containing the name of the model that defines the domain of the objective function. The string value must be enclosed by either single or double quotation marks when provided as input. The following domain models are currently supported:
 
-+   domain = 'cube'
++   `domain = 'cube'`
 
-    This is equivalent to an ndim-dimensional hyper-cube (n-cube) whose upper and lower bounds are specified by the input simulation specifications `domainCubeLimitUpper` and `domainCubeLimitLower` respectively.
+    This is equivalent to an `ndim`-dimensional hyper-cube (`n`-cube) whose upper and lower bounds are specified by the input simulation specifications `domainCubeLimitUpper` and `domainCubeLimitLower` respectively.
 
-+   domain = 'ball'
++   `domain = 'ball'`
 
     This is equivalent to an ndim-dimensional hyper-ellipsoid (n-ball) whose center and covariance matrix can be specified by the input simulation specification `domainBallCenter` and `domainBallCovMat` respectively. Alternatively, the user can let the ParaMonte samplers construct the covariance matrix of ellipsoidal domain from the input values for the `domainBallCorMat` and `domainBallStdVec` simulation specifications. Note that a spherical domain can be defined by dropping the `domainBallCovMat` and `domainBallCorMat` specifications from the input and setting all elements of `domainBallStdVec` to the desired radius of the domain.
 
@@ -25,15 +25,15 @@ The default value is an infinite cube in case of the ParaDRAM and ParaDISE sampl
 
 ### domainAxisName
 
-The simulation specification `domainAxisName` is a vector of scalar string values each element of which contains the names of the corresponding axis of the domain of the density function (that is to be explored/sampled). It is used to construct the headers of the simulation output files. Any element of `domainAxisName` that is not set by the user will automatically be assigned a default name. If all elements of `domainAxisName` are set to the same value, then a number will be suffixed to each element representing the ID of the corresponding dimension of the domain of the density function. The default value is 'sampleStatei' where integer 'i' at the end of the name is replaced by the index of the corresponding domain axis.
+The simulation specification `domainAxisName` is a vector of scalar string values each element of which contains the names of the corresponding axis of the domain of the density function (that is to be explored/sampled). It is used to construct the headers of the simulation output files. Any element of `domainAxisName` that is not set by the user will automatically be assigned a default name. If all elements of `domainAxisName` are set to the same value, then a number will be suffixed to each element representing the ID of the corresponding dimension of the domain of the density function. The default value is 'sampleStatei' where integer `'i'` at the end of the name is replaced by the index of the corresponding domain axis.
 
 ### domainBallCenter
 
-The simulation specification `domainBallCenter` is a vector of type `real` of highest precision supported by the ParaMonte library, of size `ndim` containing the coordinates of the center of the hyper-ellipsoidal (or spherical) ndim-dimensional domain of the objective function. When passed to the sampler from withing an external input file, every missing element of `domainBallCenter` will be set to the origin (zero). Together with `domainBallCovMat`, or with `domainBallCorMat` and `domainBallStdVec`, it forms a hyper-ellipsoidal or hyper-spherical domain for the ParaMonte samplers. Note that an ellipsoidal/spherical domain is used if only if the input simulation specification `domain` is set to 'ellipsoid' or 'sphere' or `ball`. Otherwise, a cubical domain will be used. The default value is the origin (i.e., a zero-valued vector of size `ndim`).
+The simulation specification `domainBallCenter` is a vector of type `real` of highest precision supported by the ParaMonte library, of size `ndim` containing the coordinates of the center of the hyper-ellipsoidal (or spherical) `ndim`-dimensional domain of the objective function. When passed to the sampler from withing an external input file, every missing element of `domainBallCenter` will be set to the origin (zero). Together with `domainBallCovMat`, or with `domainBallCorMat` and `domainBallStdVec`, it forms a hyper-ellipsoidal or hyper-spherical domain for the ParaMonte samplers. Note that an ellipsoidal/spherical domain is used if only if the input simulation specification `domain` is set to 'ellipsoid' or 'sphere' or `ball`. Otherwise, a cubical domain will be used. The default value is the origin (i.e., a zero-valued vector of size `ndim`).
 
 ### domainBallCorMat
 
-The simulation specification `domainBallCorMat` is a positive-definite matrix of type `real` of highest precision available in the ParaMonte Library of size `(ndim, ndim)` representing the correlation matrix of the domain of the objective function, where `ndim` is the dimension of the domain. Combined with the input simulation specification `domainBallStdVec`, it defines the hyper-ellipsoidal (or spherical) domain of the objective function. If the input simulation specification `domainBallCovMat` is provided by the user, then any values set for `domainBallCorMat` and `domainBallStdVec` will be automatically ignored. The input specification `domainBallCorMat` along with `proposalStdVec` are especially useful in situations where the covariance matrix computation is non-trivial. When passed to the sampler from within an external input sampler specification file, any missing element of `domainBallCovMat` will be set to the appropriate default value. The default value of `domainBallCorMat` is an ndim-by-ndim Identity matrix.
+The simulation specification `domainBallCorMat` is a positive-definite matrix of type `real` of highest precision available in the ParaMonte Library of size `(ndim, ndim)` representing the correlation matrix of the domain of the objective function, where `ndim` is the dimension of the domain. Combined with the input simulation specification `domainBallStdVec`, it defines the hyper-ellipsoidal (or spherical) domain of the objective function. If the input simulation specification `domainBallCovMat` is provided by the user, then any values set for `domainBallCorMat` and `domainBallStdVec` will be automatically ignored. The input specification `domainBallCorMat` along with `proposalStdVec` are especially useful in situations where the covariance matrix computation is non-trivial. When passed to the sampler from within an external input sampler specification file, any missing element of `domainBallCovMat` will be set to the appropriate default value. The default value of `domainBallCorMat` is an `ndim`-by-`ndim` Identity matrix.
 
 ### domainBallCovMat
 
@@ -51,9 +51,9 @@ The simulation specification `domainCubeLimitLower` is a vector of type `real` o
 
 +   `domainCubeLimitLower(3:5) = -100`
 
-    will only set the lower limits of the third, fourth, and the fifth dimensions to -100, or,
+    will only set the lower limits of the third, fourth, and the fifth dimensions to `-100`, or,
 
-+   `domainCubeLimitLower(1) = -100`, domainCubeLimitLower(2) = -1.e6`
++   `domainCubeLimitLower(1) = -100, domainCubeLimitLower(2) = -1.e6`
 
     will set the lower limit on the first dimension to `-100`, and `1.e6` on the second dimension, or,
 
@@ -74,7 +74,7 @@ The simulation specification `domainCubeLimitUpper` is a vector of type `real` o
 
 +   `domainCubeLimitUpper(1) = 100, domainCubeLimitUpper(2) = 1.e6`
 
-    will set the upper limit on the first dimension to 100, and 1.e6 on the second dimension, or,
+    will set the upper limit on the first dimension to `100`, and 1.e6 on the second dimension, or,
 
 +   `domainCubeLimitUpper = 3 * 2.5e100`
 
@@ -85,15 +85,15 @@ Beware that some ParaMonte samplers such as ParaNest require an explicit specifi
 
 ### domainErrCount
 
-The simulation specification `domainErrCount` is a scalar of type `integer` beyond which the user will be warned about the newly-proposed points excessively falling outside the domain of the objective function. For every `domainErrCount` consecutively-proposed new points that fall outside the domain of the objective function, the user will be warned until `domainErrCount = domainErrCountMax`, in which case the sampler returns a fatal error and the program stops globally. The counter for this warning is reset after a proposal sample from within the domain of the objective function is obtained. When out-of-domain sampling happens frequently, it is a strong indication of something fundamentally wrong in the simulation. It is, therefore, important to closely inspect and monitor for such frequent out-of-domain samplings. This can be done by setting `domainErrCount` to an appropriate value determined by the user. The default value is 10000.
+The simulation specification `domainErrCount` is a scalar of type `integer` beyond which the user will be warned about the newly-proposed points excessively falling outside the domain of the objective function. For every `domainErrCount` consecutively-proposed new points that fall outside the domain of the objective function, the user will be warned until `domainErrCount = domainErrCountMax`, in which case the sampler returns a fatal error and the program stops globally. The counter for this warning is reset after a proposal sample from within the domain of the objective function is obtained. When out-of-domain sampling happens frequently, it is a strong indication of something fundamentally wrong in the simulation. It is, therefore, important to closely inspect and monitor for such frequent out-of-domain samplings. This can be done by setting `domainErrCount` to an appropriate value determined by the user. The default value is `10000`.
 
 ### domainErrCountMax
 
-The simulation specification `domainErrCountMax` is a scalar of type `integer` beyond which the program will stop globally with a fatal error message declaring that the maximum number of proposal-out-of-domain-bounds has reached. The counter for this global-stop request is reset after a proposal is accepted as a sample from within the domain of the objective function. When out-of-domain sampling happens frequently, it is a strong indication of something fundamentally wrong in the simulation. It is, therefore, important to closely inspect and monitor for such frequent out-of-domain samplings. This can be done by setting domainErrCountMax to an appropriate value determined by the user. The default value is 100000.
+The simulation specification `domainErrCountMax` is a scalar of type `integer` beyond which the program will stop globally with a fatal error message declaring that the maximum number of proposal-out-of-domain-bounds has reached. The counter for this global-stop request is reset after a proposal is accepted as a sample from within the domain of the objective function. When out-of-domain sampling happens frequently, it is a strong indication of something fundamentally wrong in the simulation. It is, therefore, important to closely inspect and monitor for such frequent out-of-domain samplings. This can be done by setting domainErrCountMax to an appropriate value determined by the user. The default value is `100000`.
 
 ### inputFileHasPriority
 
-The simulation specification `inputFileHasPriority` is a scalar of type `logical` (Boolean) of default kind. If it is set to the logical true value (e.g., `.true.`, `true` or `.t.` from within an external input file), then the input specifications of the simulation will be read from the user-specified input specification file and the simulation specification assignments from within the programming language environment (if any are made) will be completely ignored. If `inputFileHasPriority` is set to the logical false value, then all simulation specifications that are taken from the user-specified input file will be overwritten by their corresponding user-set input values from within the user programming environment (if any such specifications is set). This feature is useful when, for example, some simulation specifications have to computed and specified at runtime and therefore, cannot be specified before the program execution. Currently, this functionality (i.e., prioritizing the input file values to input-procedure-argument values) is available only in the Fortran interface to the ParaMonte library routines. It can be set exclusively within an external input file and its value is ignored in non-Fortran programming language simulation environments. The default value is FALSE.
+The simulation specification `inputFileHasPriority` is a scalar of type `logical` (Boolean) of default kind. If it is set to the logical true value (e.g., `.true.`, `true` or `.t.` from within an external input file), then the input specifications of the simulation will be read from the user-specified input specification file and the simulation specification assignments from within the programming language environment (if any are made) will be completely ignored. If `inputFileHasPriority` is set to the logical false value, then all simulation specifications that are taken from the user-specified input file will be overwritten by their corresponding user-set input values from within the user programming environment (if any such specifications is set). This feature is useful when, for example, some simulation specifications have to computed and specified at runtime and therefore, cannot be specified before the program execution. Currently, this functionality (i.e., prioritizing the input file values to input-procedure-argument values) is available only in the Fortran interface to the ParaMonte library routines. It can be set exclusively within an external input file and its value is ignored in non-Fortran programming language simulation environments. The default value is `FALSE`.
 
 ### outputChainFileFormat
 
@@ -111,7 +111,7 @@ The simulation specification `outputChainFileFormat` is a scalar string of maxim
 
     This is the binary file format which is not human-readable, but preserves the exact values in the output chain file. It is also often the fastest mode of chain file generation. If the binary file format is chosen, the chain will be automatically output in the compact format (but as binary) to ensure the production of the smallest-possible output chain file. Binary chain files will have the .bin file extensions. Use the binary format if you need full accuracy representation of the output values while having the smallest-size output chain file in the shortest time possible.
 
-The default value is outputChainFileFormat = 'compact' as it provides a reasonable trade-off between speed and output file size for the specified simulation task. The input values are case-INsensitive.
+The default value is `outputChainFileFormat = 'compact'` as it provides a reasonable trade-off between speed and output file size for the specified simulation task. The input values are case-INsensitive.
 
 ### outputColumnWidth
 
